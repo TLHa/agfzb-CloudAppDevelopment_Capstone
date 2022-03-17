@@ -15,11 +15,62 @@
 
     <body>
     <!-- Remove this line the first time you edit this file -->
-     This is the index page of your Django app!
-    <!--Add a nav bar here -->
+    <nav class="navbar navbar-light bg-light">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Dealership Review</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            {% if user.is_authenticated %}
+            <li>
+                <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
+                <a class="btn btn-link" href="">Logout</a>
+{#                <a class="btn btn-link" href="{% url 'onlinecourse:logout' %}">Logout</a>#}
+            </li>
+            {% else %}
+            <li>
+{#                <form class="form-inline" action="{% url 'onlinecourse:login' %}" method="post">#}
+                <form class="form-inline" action="" method="post">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Username" name="username" >
+                        <input type="password" class="form-control" placeholder="Password" name="psw" >
+                        <button class="btn btn-primary" type="submit">Login</button>
+{#                        <a class="btn btn-link" href="{% url 'onlinecourse:registration' %}">Sign Up</a>#}
+                        <a class="btn btn-link" href="">Sign Up</a>
+                    </div>
+                </form>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
 
     <!--Add a dealer table here -->
-
+    {% if dealership_list %}
+        <div class="container">
+            <div class="card-deck">
+                {% for dealership in dealership_list %}
+                         <div class="card" style="width: 36rem;">
+                          <img class="card-img-left" src="{{MEDIA_URL}}/{{ dealership.image }}" width="240px" height="240px"
+                               alt="Course image">
+                          <div class="card-body bg-light">
+                              <h5 class="card-title">{{ dealership.name }}, <span class="text-success">
+                                  {{ dealership.total_enrollment}} enrolled</span></h5>
+                            <p class="card-text">{{ dealership.description}}</p>
+                            <form action="" method="post">
+                                  {% csrf_token %}
+                                  <input class="btn btn-primary"  type="submit"
+                                         value="{% if dealership.is_enrolled %}Enter{% else %}Enroll{% endif %} ">
+                            </form>
+                          </div>
+                        </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <p>No dealerships are available.</p>
+    {% endif %}
     </body>
 
 </html>
