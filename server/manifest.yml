@@ -1,11 +1,11 @@
   applications:
   - name: htl-capstone-djangoapp
     routes:
-      - route: $HOST.$DOMAIN
+      - route: htl-capstone.au-syd.cf.appdomain.cloud
     memory: 128M
     buildpack: python_buildpack
   - name: htl-capstone-djangoapp-nginx
     routes:
-      - route: $HOST.$DOMAIN/static
+      - route: htl-capstone.au-syd.cf.appdomain.cloud/static
     memory: 128M
     buildpack: staticfile_buildpack
