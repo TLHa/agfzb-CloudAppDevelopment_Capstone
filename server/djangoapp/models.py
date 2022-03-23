@@ -1,3 +1,4 @@
+from enum import Enum
 from django.db import models
 from django.utils.timezone import now
 
@@ -9,7 +10,12 @@ from django.utils.timezone import now
 # - Description
 # - Any other fields you would like to include in car make model
 # - __str__ method to print a car make object
+class CarMake(models.Model):
+    name = models.TextField()
+    description = models.TextField()
 
+    def __str__(self):
+        return f'{self.name} - {self.description}'
 
 # <HINT> Create a Car Model model `class CarModel(models.Model):`:
 # - Many-To-One relationship to Car Make model (One Car Make has many Car Models, using ForeignKey field)
@@ -19,9 +25,53 @@ from django.utils.timezone import now
 # - Year (DateField)
 # - Any other fields you would like to include in car model
 # - __str__ method to print a car make object
+class CarModelType(Enum):
+    SEDAN = "SEDAN"
+    SUV = "SUV"
+    WAGON = "WAGON"
+    @classmethod
+    def choices(cls):
+        return tuple((i.name, i.value) for i in cls)
+
+class CarModel(models.Model):
+    name = models.TextField()
+    dealer_id = models.IntegerField()
+    type = models.CharField(max_length=255, choices=CarModelType.choices())
+    year = models.DateField()
+    car_make = models.ForeignKey(CarMake, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.name} - {self.dealer_id} - {self.type} - {self.year} - {self.car_make}'
 
 
 # <HINT> Create a plain Python class `CarDealer` to hold dealer data
+class CarDealer(models.Model):
+    address = models.TextField()
+    city = models.TextField()
+    full_name = models.TextField()
+    lat = models.FloatField()
+    long = models.FloatField()
+    short_name = models.TextField()
+    st = models.TextField()
+    state: models.TextField()
+    zip: models.TextField()
+
+    def __str__(self):
+        return super().__str__()
 
 
 # <HINT> Create a plain Python class `DealerReview` to hold review data
+class DealerReview(models.Model):
+    another = models.TextField()
+    car_make = models.TextField()
+    car_model = models.TextField()
+    car_year = models.DateField()
+    dealership = models.IntegerField()
+    name = models.TextField()
+    purchase = models.BooleanField()
+    purchase_date = models.DateField()
+    review = models.TextField()
+
+    def __str__(self):
+        return super().__str__()
+
