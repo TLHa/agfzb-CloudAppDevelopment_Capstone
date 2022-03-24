@@ -48,12 +48,12 @@ def post_request(url, json_payload, **kwargs):
 
 def get_dealers_from_cf(url, **kwargs):
     results = []
-    key_pair_params = []
-    for key, value in kwargs:
-        key_pair_params.append(f'{key}={value}')
-    url = url + '?' + '&'.join(key_pair_params)
+    # key_pair_params = []
+    # for key, value in kwargs:
+    #     key_pair_params.append(f'{key}={value}')
+    # url = url + '?' + '&'.join(key_pair_params)
     # Call get_request with a URL parameter
-    json_result = get_request(url)
+    json_result = get_request(url, dealerId=kwargs['dealerId'] if kwargs.get('dealerId') else None, state=kwargs['state'] if kwargs.get('state') else None)
     if json_result:
         # Get the row list in JSON as dealers
         dealers = json_result["docs"]

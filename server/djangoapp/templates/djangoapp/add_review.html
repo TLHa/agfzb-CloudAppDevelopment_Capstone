@@ -11,6 +11,89 @@
 
 </head>
     <body>
-    <!--Add review form here -->
+    <nav class="navbar navbar-light bg-light">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Dealership Review</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            {% if user.is_authenticated %}
+            <li>
+                <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
+{#                <a class="btn btn-link" href="">Logout</a>#}
+                <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
+            </li>
+            {% else %}
+            <li>
+                <form class="form-inline" action="{% url 'djangoapp:login' %}" method="post">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Username" name="username" >
+                        <input type="password" class="form-control" placeholder="Password" name="psw" >
+                        <button class="btn btn-primary" type="submit">Login</button>
+                        <a class="btn btn-link" href="{% url 'djangoapp:registration' %}">Sign Up</a>
+                    </div>
+                </form>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+        <!--Add review form here -->
+    {% if user.is_authenticated %}
+        <h1>Add review about <span class="font-weight-bold">{{ dealership.full_name }}</span></h1>
+        <form class="" action="{% url 'djangoapp:add_review_on_cf' dealership.id%}" method="POST">
+            {% csrf_token %}
+            <div >
+                <div class="p-2">
+                    <div class="font-weight-bold">Enter a review content:</div>
+                    <textarea class="form-control w-50" id="review" name="review" rows="2" required></textarea>
+                </div>
+                <div class="d-flex p-2 align-items-center">
+                    <input class="" type="checkbox" name="purchase" id="purchasecheck">
+                    <div class="pl-1">Has purchased the car from <span class="font-weight-bold">{{ dealership.full_name }}</span>? </div>
+                </div>
+                <div class="d-flex p-2 align-items-baseline">
+                    <p class="font-weight-bold">Select your car (model - make - year)</p>
+                    <select name="car" id="car" class="form-select ml-2" required>
+                    {% for car in cars %}
+                        <option selected value={{car.id}}>{{car.car_make}}-{{car.car_model}}-{{ car.car_year}}</option>
+                    {% endfor %}
+                </select>
+                </div>
+                <div class="p-2">
+                    <p>Select your purchase date: </p>
+                    <input class="form-control w-50" type="date" name="purchase_date" id="purchasedate" required>
+                </div>
+                <div class="p-2">
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
+    {% else %}
+        <table class="table" id="table" data-filter-control="true">
+             <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Name</th>
+                  <th>Model</th>
+                  <th>Year</th>
+                </tr>
+              </thead>
+                <tbody>
+                {% for car in cars %}
+                    <tr>
+                        <td>{{car.id}}</td>
+                        <td>{{car.car_make}}</td>
+                        <td>{{car.car_model}}</td>
+                        <td>{{car.car_year}}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+    {% endif %}
     </body>
+<script type="text/javascript">
+
+</script>
 </html>
